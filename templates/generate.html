@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Generate Image</title>
+</head>
+
+<body>
+    <h1>Generate Image</h1>
+    <form action="/" method="post" onsubmit="showLoading()">
+        <label for="prompt">Prompt:</label>
+        <input type="text" id="prompt" name="prompt" required><br>
+
+        <label for="style">Style:</label>
+        <select id="style" name="style" required>
+            <option value="" disabled selected>Select a First style</option>
+        </select><br>
+
+        <label for="style2">Style2:</label>
+        <select id="style2" name="style2" required>
+            <option value="" disabled selected>Select a Second style</option>
+        </select><br>
+
+        <button type="submit">Generate</button>
+
+        <div id="loading" style="display: none;">Generating image, please wait...</div>
+
+        <h2>Generate Image</h2>
+        <img id="generatedImage"
+            src=""  alt="Generated Image" style="max-width: 1280px; max-height: 1280px;">
+    </form>
+
+    <script>
+        // Load styles from the JSON file and populate the select options
+        function showLoading() {
+            // Show the loading element
+            const loadingElement = document.getElementById('loading');
+            loadingElement.style.display = 'block';
+
+            // Hide the generated image (if it was already shown)
+            const generatedImage = document.getElementById('generatedImage');
+            generatedImage.style.display = 'none';
+
+            return true;
+        }
+
+        fetch('/static/style.json')
+            .then(response => response.json())
+            .then(data => {
+                const styleSelect = document.getElementById('style');
+                for (const style in data) {
+                    const option = document.createElement('option');
+                    option.value = data[style];
+                    option.text = style;
+                    styleSelect.appendChild(option);
+                }
+            })
+            .catch(error => console.error('Error loading styles:', error));
+
+        fetch('/static2/style2.json')
+            .then(response => response.json())
+            .then(data => {
+                const style2Select = document.getElementById('style2');
+                for (const style2 in data) {
+                    const option = document.createElement('option');
+                    option.value = data[style2];
+                    option.text = style2;
+                    style2Select.appendChild(option);
+                }
+            })
+            .catch(error => console.error('Error loading styles:', error));
+
+    </script>
+</body>
+
+</html>
